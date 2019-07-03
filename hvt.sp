@@ -2,13 +2,13 @@
 #include <sdktools>
 #include <colors>
 
+// CCSPlayer m_iAccount
 int m_iAccount = -1;
-
-int g_nHvt = -1;
 
 float g_flKdrs[MAXPLAYERS+1] = 0.0;
 int g_nKills[MAXPLAYERS+1] = 0;
 int g_nDeaths[MAXPLAYERS+1] = 0;
+int g_nHvt = -1;
 
 ConVar hvt_moneyforkilldiff = null;
 ConVar hvt_maxreward = null;
@@ -59,44 +59,44 @@ public void OnPluginStart()
 	}
 }
 
-public CPrintToAllExcept(int exception, const String:message[], any:...)
+public CPrintToAllExcept(int exception, const String:szMessage[], any:...)
 {
-	decl String:formatted[1024];
-	VFormat(formatted, sizeof(formatted), message, 2);
+	decl String:szFormatted[1024];
+	VFormat(szFormatted, sizeof(szFormatted), szMessage, 2);
 
 	for (int i = 1; i < MaxClients; ++i)
 	{
 		if (i != exception && IsClientConnected(i))
 		{
-			CPrintToChat(i, "%s", formatted);
+			CPrintToChat(i, "%s", szFormatted);
 		}
 	}
 }
 
-public HvtDebugMessage(const String:message[], any:...)
+public HvtDebugMessage(const String:szMessage[], any:...)
 {
 	if (GetConVarInt(hvt_debug) == 0)
 		return;
 
-	decl String:formatted[1024];
-	VFormat(formatted, sizeof(formatted), message, 2);
+	decl String:szFormatted[1024];
+	VFormat(szFormatted, sizeof(szFormatted), szMessage, 2);
 
-	PrintToServer("[HVT] %s", formatted);
+	PrintToServer("[HVT] %s", szFormatted);
 }
 
-public bool IsValidClient(int client)
+public bool IsValidClient(int nClient)
 {
-	return IsClientConnected(client) && IsClientInGame(client);
+	return IsClientConnected(nClient) && IsClientInGame(nClient);
 }
 
-public ResetClient(int client)
+public ResetClient(int nClient)
 {
-	if (client == g_nHvt)
+	if (nClient == g_nHvt)
 		ResetHvt();
 
-	g_flKdrs[client] = 0.0;
-	g_nKills[client] = 0;
-	g_nDeaths[client] = 0;
+	g_flKdrs[nClient] = 0.0;
+	g_nKills[nClient] = 0;
+	g_nDeaths[nClient] = 0;
 }
 
 public ResetHvt()
@@ -116,8 +116,8 @@ public ResetHvt()
 
 public UpdateHvt()
 {
-	float highestKdr = 0.0;
-	int highestClient = -1;
+	float flHighestKdr = 0.0;
+	int nHighestClient = -1;
 
 	for (int i = 1; i < MaxClients; ++i)
 	{
@@ -131,35 +131,35 @@ public UpdateHvt()
 			continue;
 		}
 
-		float kdr = g_flKdrs[i];
-
-		if (kdr > highestKdr && g_nKills[i] >= GetConVarInt(hvt_minkills)) {
-			highestKdr = kdr;
-			highestClient = i;
+		float flKdr = g_flKdrs[i];
+		if (flKdr > flHighestKdr && g_nKills[i] >= GetConVarInt(hvt_minkills))
+		{
+			flHighestKdr = flKdr;
+			nHighestClient = i;
 		}
 	}
 
-	if (highestClient != -1 && highestClient != g_nHvt)
+	if (nHighestClient != -1 && nHighestClient != g_nHvt)
 	{
 		decl String:szClientName[64];
-		if (GetClientName(highestClient, szClientName, sizeof(szClientName)))
+		if (GetClientName(nHighestClient, szClientName, sizeof(szClientName)))
 		{
-			g_nHvt = highestClient;
+			g_nHvt = nHighestClient;
 			CPrintToAllExcept(g_nHvt, "{red}%s {default}has become the {red}high value target{default}.", szClientName);
 			CPrintToChat(g_nHvt, "{red}You {default}have become the {red}high value target{default}.");
 		}
 	}
 
-	if (highestClient == -1)
+	if (nHighestClient == -1)
 	{
 		ResetHvt();
 	}
 }
 
-public float GetKdr(int client, int newDeaths, int newFragss)
+public float GetKdr(int nClient, int nNewDeaths, int nNewFrags)
 {
-	int nDeaths = GetClientDeaths(client) + newDeaths;
-	int nFrags = GetClientFrags(client) + newFragss;
+	int nDeaths = GetClientDeaths(nClient) + nNewDeaths;
+	int nFrags = GetClientFrags(nClient) + nNewFrags;
 	
 	HvtDebugMessage("Frags: %i Deaths: %i", nFrags, nDeaths);
 	float flKdr = float(nFrags) / float(Max(nDeaths, 1));
@@ -170,9 +170,8 @@ public float GetKdr(int client, int newDeaths, int newFragss)
 	if (nFrags < 0)
 		flKdr = float(0);
 
-	g_nKills[client] = nFrags;
-	g_nDeaths[client] = nDeaths;
-	
+	g_nKills[nClient] = nFrags;
+	g_nDeaths[nClient] = nDeaths;
 	return flKdr;
 }
 
@@ -202,22 +201,22 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 			&& nVictimId != nAttackerId
 			&& GetClientName(nAttackerId, szClientName, sizeof(szClientName)))
 		{
-			int baseReward = GetConVarInt(hvt_moneyforkilldiff);
-			int minReward = GetConVarInt(hvt_minreward);
-			int maxReward = GetConVarInt(hvt_maxreward);
+			int nBaseReward = GetConVarInt(hvt_moneyforkilldiff);
+			int nMinReward = GetConVarInt(hvt_minreward);
+			int nMaxReward = GetConVarInt(hvt_maxreward);
 
-			int reward = Max(1, g_nKills[g_nHvt] - g_nKills[nAttackerId]) * baseReward;
+			int nReward = Max(1, g_nKills[g_nHvt] - g_nKills[nAttackerId]) * nBaseReward;
 
-			int moneyReward = Min(Max(minReward, reward), maxReward);
-			CPrintToAllExcept(nAttackerId, "Rewarding {red}%s {lightgreen}$%i {default}for killing the {red}high value target{default}.", szClientName, moneyReward);
+			int nTotalReward = Min(Max(nMinReward, nReward), nMaxReward);
+			CPrintToAllExcept(nAttackerId, "Rewarding {red}%s {lightgreen}$%i {default}for killing the {red}high value target{default}.", szClientName, nTotalReward);
 			CPrintToChat(nAttackerId, "You have been rewarded {lightgreen}$%i for killing the {red}high value target{default}.");
 
-			int newMoney = GetEntData(nAttackerId, m_iAccount) + moneyReward;
+			int nNewMoney = GetEntData(nAttackerId, m_iAccount) + nTotalReward;
 
-			if (newMoney > 16000)
-				newMoney = 16000;
+			if (nNewMoney > 16000)
+				nNewMoney = 16000;
 			
-			SetEntData(nAttackerId, m_iAccount, newMoney, 4, true);
+			SetEntData(nAttackerId, m_iAccount, nNewMoney, 4, true);
 		}
 	}
 
@@ -239,32 +238,37 @@ public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 	}
 
 	UpdateHvt();
+	return Plugin_Continue;
 }
 
 public Action:Event_Connect(Handle:event, const String:name[], bool:dontBroadcast) 
 {
 	int nUserId = GetEventInt(event, "userid");
-	int client = GetClientOfUserId(nUserId);
+	int nClient = GetClientOfUserId(nUserId);
 
-	if (client > 0 && client <= MAXPLAYERS)
+	if (nClient > 0 && nClient <= MAXPLAYERS)
 	{
-		HvtDebugMessage("Event_Connect: Resetting client %i", client);
-		ResetClient(client);
+		HvtDebugMessage("Event_Connect: Resetting client %i", nClient);
+		ResetClient(nClient);
 		UpdateHvt();
 	}
+
+	return Plugin_Continue;
 }
 
 public Action:Event_Disconnect(Handle:event, const String:name[], bool:dontBroadcast) 
 {
 	int nUserId = GetEventInt(event, "userid");
-	int client = GetClientOfUserId(nUserId);
+	int nClient = GetClientOfUserId(nUserId);
 
-	if (client > 0 && client <= MAXPLAYERS)
+	if (nClient > 0 && nClient <= MAXPLAYERS)
 	{
-		HvtDebugMessage("Event_Disconnect: Resetting client %i", client);
-		ResetClient(client);
+		HvtDebugMessage("Event_Disconnect: Resetting client %i", nClient);
+		ResetClient(nClient);
 		UpdateHvt();
 	}
+
+	return Plugin_Continue;
 }
 
 public Action:OnLevelInit(const String:mapName[], String:mapEntities[2097152])
