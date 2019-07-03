@@ -42,11 +42,12 @@ public void OnPluginStart()
 	
 	if (m_iAccount > 0) {
 		PrintToServer("[HVT] High Value Target plugin loaded successfully!");
-		
+
 		HookEvent("player_death", Event_PlayerDeath);
 		HookEvent("round_start", Event_RoundStart);
 		HookEvent("player_disconnect", Event_Disconnect);
 		HookEvent("player_connect", Event_Connect);
+		HookEvent("server_spawn", Event_ServerSpawn)
 	} else {
 		PrintToServer("[HVT] High Value Target plugin load failed: unable to find m_iAccount");
 	}
@@ -153,13 +154,13 @@ public float GetKdr(int nClient, int nNewDeaths, int nNewFrags)
 {
 	int nDeaths = GetClientDeaths(nClient) + nNewDeaths;
 	int nFrags = GetClientFrags(nClient) + nNewFrags;
-	
+
 	HvtDebugMessage("Frags: %i Deaths: %i", nFrags, nDeaths);
 	float flKdr = float(nFrags) / float(Max(nDeaths, 1));
-	
+
 	if ((nDeaths == 0) && (nFrags != 0))
 		flKdr = float(nFrags);
-	
+
 	if (nFrags < 0)
 		flKdr = float(0);
 
@@ -172,10 +173,10 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 {	
 	int nAttacker = GetEventInt(event, "attacker");
 	int nVictim = GetEventInt(event, "userid");
-	
+
 	int nAttackerId = GetClientOfUserId(nAttacker);
 	int nVictimId = GetClientOfUserId(nVictim);
-	
+
 	// Update attacker
 	if (IsValidClient(nAttackerId))
 	{
@@ -208,7 +209,7 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 
 			if (nNewMoney > 16000)
 				nNewMoney = 16000;
-			
+
 			SetEntData(nAttackerId, m_iAccount, nNewMoney, 4, true);
 		}
 	}
@@ -264,12 +265,14 @@ public Action:Event_Disconnect(Handle:event, const String:name[], bool:dontBroad
 	return Plugin_Continue;
 }
 
-public Action:OnLevelInit(const String:mapName[], String:mapEntities[2097152])
+public Action:Event_ServerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	HvtDebugMessage("OnLevelInit: Resetting client HVT data");
+	HvtDebugMessage("Event_ServerSpawn: Resetting client HVT data");
 	for (int i = 1; i < MaxClients; ++i)
 	{
 		ResetClient(i);
 	}
+
 	ResetHvt();
+	return Plugin_Continue;
 }
