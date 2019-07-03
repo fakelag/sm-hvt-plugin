@@ -146,7 +146,7 @@ public UpdateHvt()
 
 	if (highestClient != -1 && highestClient != g_nHvt)
 	{
-		new String:szClientName[64];
+		decl String:szClientName[64];
 		if (GetClientName(highestClient, szClientName, sizeof(szClientName)))
 		{
 			g_nHvt = highestClient;
