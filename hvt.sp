@@ -1,6 +1,6 @@
 #include <sourcemod>
 #include <sdktools>
-#include <colors>
+#include <morecolors>
 
 // CCSPlayer m_iAccount
 int m_iAccount = -1;
