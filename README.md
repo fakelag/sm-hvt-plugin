@@ -20,7 +20,7 @@ A configurable reward system for killing the best player on the server.
 
 ![image](https://raw.githubusercontent.com/fakelag/sm-hvt-plugin/master/img/img0.png)
 ![image](https://raw.githubusercontent.com/fakelag/sm-hvt-plugin/master/img/img1.png)
-![image](https://raw.githubusercontent.com/fakelag/sm-hvt-pluginy/master/img/img2.png)
+![image](https://raw.githubusercontent.com/fakelag/sm-hvt-plugin/master/img/img2.png)
 
 ## Todo List
 * Add a [rankme](https://forums.alliedmods.net/showthread.php?p=1456869) integration
