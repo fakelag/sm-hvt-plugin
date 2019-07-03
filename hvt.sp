@@ -35,7 +35,8 @@ public Action Command_Hvt(int nClient, int args)
 	if (g_nHvt != -1 && IsValidClient(g_nHvt) && GetClientName(g_nHvt, szClientName, sizeof(szClientName)))
 	{
 		CPrintToChat(nClient, "Current HVT is %s%s{default}.", (GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}"), szClientName);
-	} else
+	}
+	else
 	{
 		CPrintToChat(nClient, "There is no HVT currently.");
 	}
@@ -54,7 +55,8 @@ public void OnPluginStart()
 
 	m_iAccount = FindSendPropInfo("CCSPlayer", "m_iAccount");
 	
-	if (m_iAccount > 0) {
+	if (m_iAccount > 0)
+	{
 		PrintToServer("[HVT] High Value Target plugin loaded successfully!");
 
 		HookEvent("player_death", Event_PlayerDeath);
@@ -62,7 +64,9 @@ public void OnPluginStart()
 		HookEvent("player_disconnect", Event_Disconnect);
 		HookEvent("player_connect", Event_Connect);
 		HookEvent("server_spawn", Event_ServerSpawn)
-	} else {
+	}
+	else
+	{
 		PrintToServer("[HVT] High Value Target plugin load failed: unable to find m_iAccount");
 	}
 }
