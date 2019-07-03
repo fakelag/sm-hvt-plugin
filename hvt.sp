@@ -248,6 +248,16 @@ public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 	// 	RankMe_GetRank(z, RankME_OnRankReceived, 0);
 	// }
 
+	if (GetConVarBool(hvt_roundmessage))
+	{
+		decl String:szClientName[64];
+		if (g_nHvt != -1 && IsValidClient(g_nHvt) && GetClientName(nAttackerId, szClientName, sizeof(szClientName)))
+		{
+			CPrintToAllExcept(g_nHvt, "{red}%s {default}is the current {red}high value target{default}.", szClientName);
+			CPrintToChat(g_nHvt, "{red}You {default}are the current {red}high value target{default}.");
+		}
+	}
+
 	UpdateHvt();
 }
 
