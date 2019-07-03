@@ -29,6 +29,19 @@ public Plugin:HvtPluginInfo =
 public Min(int a, int b) {return (((a)<(b))?(a):(b));}
 public Max(int a, int b) {return (((a)>(b))?(a):(b));}
 
+public Action Command_Hvt(int nClient, int args)
+{
+	decl String:szClientName[64];
+	if (g_nHvt != -1 && IsValidClient(g_nHvt) && GetClientName(g_nHvt, szClientName, sizeof(szClientName)))
+	{
+		CPrintToChat(nClient, "Current HVT is %s%s{default}.", (GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}"), szClientName);
+	} else
+	{
+		CPrintToChat(nClient, "There is no HVT currently.");
+	}
+	return Plugin_Handled;
+}
+
 public void OnPluginStart()
 {
 	hvt_moneyforkilldiff = CreateConVar("hvt_moneyforkilldiff", "200", "Amount of money granted for every kill HVT has more than the killer");
@@ -37,6 +50,7 @@ public void OnPluginStart()
 	hvt_minkills = CreateConVar("hvt_minkills", "4", "Minimum amount of kills to be considered for HVT");
 	hvt_roundmessage = CreateConVar("hvt_roundmessage", "0", "Should the high value target be displayed in chat at the start of each round");
 	hvt_debug = CreateConVar("hvt_debug", "0", "Debug hvt plugin");
+	RegConsoleCmd("hvt", Command_Hvt);
 
 	m_iAccount = FindSendPropInfo("CCSPlayer", "m_iAccount");
 	
