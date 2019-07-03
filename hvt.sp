@@ -63,7 +63,7 @@ public void OnPluginStart()
 
 public CPrintToAllExcept(int exception, const String:message[], any:...)
 {
-	new String:formatted[1024];
+	decl String:formatted[1024];
 	VFormat(formatted, sizeof(formatted), message, 2);
 
 	for (int i = 1; i < MaxClients; ++i)
@@ -80,7 +80,7 @@ public HvtDebugMessage(const String:message[], any:...)
 	if (GetConVarInt(hvt_debug) == 0)
 		return;
 
-	new String:formatted[1024];
+	decl String:formatted[1024];
 	VFormat(formatted, sizeof(formatted), message, 2);
 
 	PrintToServer("[HVT] %s", formatted);
@@ -107,7 +107,7 @@ public ResetHvt()
 {
 	if (g_nHvt != -1 && IsValidClient(g_nHvt))
 	{
-		new String:szClientName[64];
+		decl String:szClientName[64];
 		if(GetClientName(g_nHvt, szClientName, sizeof(szClientName)))
 		{
 			// SendGlobalMsg("%s is no longer the high value target.", szClientName);
@@ -208,7 +208,7 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 		g_flKdrs[nVictimId] = GetKdr(nVictimId, 1, 0);
 		UpdateHvt();
 
-		new String:szClientName[64];
+		decl String:szClientName[64];
 		if (IsValidClient(nAttackerId)
 			&& g_nHvt == nVictimId
 			&& nVictimId != nAttackerId
