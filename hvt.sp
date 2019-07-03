@@ -26,15 +26,8 @@ public Plugin:HvtPluginInfo =
 	url = ""
 };
 
-public Min(int a, int b)
-{
-	return (((a)<(b))?(a):(b));
-}
-
-public Max(int a, int b)
-{
-	return (((a)>(b))?(a):(b));
-}
+public Min(int a, int b) {return (((a)<(b))?(a):(b));}
+public Max(int a, int b) {return (((a)>(b))?(a):(b));}
 
 public void OnPluginStart()
 {
