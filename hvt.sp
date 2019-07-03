@@ -167,8 +167,8 @@ public UpdateHvt(bool bChatMessage)
 					GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}", szClientName);
 
 				CPrintToChat(g_nHvt, "%sYou {default}have become the {red}high value target{default}.", GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}");
+			}
 		}
-	}
 	}
 
 	if (nHighestClient == -1)
@@ -177,12 +177,12 @@ public UpdateHvt(bool bChatMessage)
 	}
 }
 
-public float GetKdr(int nClient, int nNewDeaths, int nNewFrags)
+public UpdateStats(int nClient, int nNewDeaths, int nNewFrags)
 {
 	int nDeaths = GetClientDeaths(nClient) + nNewDeaths;
 	int nFrags = GetClientFrags(nClient) + nNewFrags;
 
-	HvtDebugMessage("Frags: %i Deaths: %i", nFrags, nDeaths);
+	HvtDebugMessage("UpdateStats - Frags: %i Deaths: %i", nFrags, nDeaths);
 	float flKdr = float(nFrags) / float(Max(nDeaths, 1));
 
 	if ((nDeaths == 0) && (nFrags != 0))
@@ -193,7 +193,7 @@ public float GetKdr(int nClient, int nNewDeaths, int nNewFrags)
 
 	g_nKills[nClient] = nFrags;
 	g_nDeaths[nClient] = nDeaths;
-	return flKdr;
+	g_flKdrs[nClient] = flKdr;
 }
 
 public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
@@ -207,14 +207,13 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 	// Update attacker
 	if (IsValidClient(nAttackerId))
 	{
-		g_flKdrs[nAttackerId] = GetKdr(nAttackerId, 0, 1);
+		UpdateStats(nAttackerId, 0, 1);
 	}
 
 	// Update victim
 	if (IsValidClient(nVictimId))
 	{
-		g_flKdrs[nVictimId] = GetKdr(nVictimId, 1, 0);
-		UpdateHvt();
+		UpdateStats(nVictimId, 1, 0);
 
 		decl String:szClientName[64];
 		if (IsValidClient(nAttackerId)
