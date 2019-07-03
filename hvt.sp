@@ -70,7 +70,7 @@ public void OnPluginStart()
 public CPrintToAllExcept(int exception, const String:szMessage[], any:...)
 {
 	decl String:szFormatted[1024];
-	VFormat(szFormatted, sizeof(szFormatted), szMessage, 2);
+	VFormat(szFormatted, sizeof(szFormatted), szMessage, 3);
 
 	for (int i = 1; i < MaxClients; ++i)
 	{
@@ -138,6 +138,11 @@ public UpdateHvt()
 
 			continue;
 		}
+
+		int nTeam = GetClientTeam(i);
+
+		if (nTeam == 0 || nTeam == 1)
+			continue;
 
 		float flKdr = g_flKdrs[i];
 		if (flKdr > flHighestKdr && g_nKills[i] >= GetConVarInt(hvt_minkills))
