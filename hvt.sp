@@ -124,7 +124,7 @@ public ResetHvt()
 	g_nHvt = -1;
 }
 
-public UpdateHvt()
+public UpdateHvt(bool bChatMessage)
 {
 	float flHighestKdr = 0.0;
 	int nHighestClient = -1;
@@ -160,9 +160,15 @@ public UpdateHvt()
 		if (GetClientName(nHighestClient, szClientName, sizeof(szClientName)))
 		{
 			g_nHvt = nHighestClient;
-			CPrintToAllExcept(g_nHvt, "{red}%s {default}has become the {red}high value target{default}.", szClientName);
-			CPrintToChat(g_nHvt, "{red}You {default}have become the {red}high value target{default}.");
+
+			if (bChatMessage)
+			{
+				CPrintToAllExcept(g_nHvt, "%s%s {default}has become the {red}high value target{default}.",
+					GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}", szClientName);
+
+				CPrintToChat(g_nHvt, "%sYou {default}have become the {red}high value target{default}.", GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}");
 		}
+	}
 	}
 
 	if (nHighestClient == -1)
@@ -238,6 +244,7 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 		}
 	}
 
+	UpdateHvt(true);
 	return Plugin_Continue;
 }
 
@@ -245,7 +252,10 @@ public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 {
 	HvtDebugMessage("Event_RoundStart");
 
-	if (GetConVarBool(hvt_roundmessage))
+	bool bRoundMessage = GetConVarBool(hvt_roundmessage);
+	UpdateHvt(!bRoundMessage);
+
+	if (bRoundMessage)
 	{
 		decl String:szClientName[64];
 		if (g_nHvt != -1 && IsValidClient(g_nHvt) && GetClientName(g_nHvt, szClientName, sizeof(szClientName)))
@@ -260,7 +270,6 @@ public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 		}
 	}
 
-	UpdateHvt();
 	return Plugin_Continue;
 }
 
@@ -273,7 +282,7 @@ public Action:Event_Connect(Handle:event, const String:name[], bool:dontBroadcas
 	{
 		HvtDebugMessage("Event_Connect: Resetting client %i", nClient);
 		ResetClient(nClient);
-		UpdateHvt();
+		UpdateHvt(true);
 	}
 
 	return Plugin_Continue;
@@ -288,7 +297,7 @@ public Action:Event_Disconnect(Handle:event, const String:name[], bool:dontBroad
 	{
 		HvtDebugMessage("Event_Disconnect: Resetting client %i", nClient);
 		ResetClient(nClient);
-		UpdateHvt();
+		UpdateHvt(true);
 	}
 
 	return Plugin_Continue;
