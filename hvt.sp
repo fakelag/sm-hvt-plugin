@@ -121,7 +121,7 @@ public ResetHvt()
 			CPrintToAllExcept(g_nHvt, "%s%s {default}is no longer the {red}HVT{default}.",
 				GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}", szClientName);
 
-			CPrintToChat(g_nHvt, "You are no longer the {red}high value target{default}.");
+			CPrintToChat(g_nHvt, "%sYou are no longer the {red}High Value Target{default}.", (GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}"));
 		}
 	}
 
@@ -268,7 +268,7 @@ public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 				(GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}"), szClientName);
 
 			HvtDebugMessage("Event_RoundStart: printing... 2");
-			CPrintToChat(g_nHvt, "{red}You {default}are the current {red}high value target{default}.");
+			CPrintToChat(g_nHvt, "%sYou {default}are the current {red}High Value Target{default}.", (GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}"));
 			HvtDebugMessage("Event_RoundStart: printing... 3");
 		}
 	}
