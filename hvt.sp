@@ -167,10 +167,10 @@ public UpdateHvt(bool bChatMessage)
 
 			if (bChatMessage)
 			{
-				CPrintToAllExcept(g_nHvt, "%s%s {default}has become the {red}high value target{default}.",
+				CPrintToAllExcept(g_nHvt, "%s%s {default}has become the {red}High Value Target{default}.",
 					GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}", szClientName);
 
-				CPrintToChat(g_nHvt, "%sYou {default}have become the {red}high value target{default}.", GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}");
+				CPrintToChat(g_nHvt, "%sYou {default}have become the {red}High Value Target{default}.", GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}");
 			}
 		}
 	}
@@ -232,10 +232,10 @@ public Action:Event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 			int nReward = Max(1, g_nKills[g_nHvt] - g_nKills[nAttackerId]) * nBaseReward;
 			int nTotalReward = Min(Max(nMinReward, nReward), nMaxReward);
 
-			CPrintToAllExcept(nAttackerId, "Rewarding %s%s {lightgreen}$%i {default}for killing the {red}high value target{default}.",
+			CPrintToAllExcept(nAttackerId, "Rewarding %s%s {lightgreen}$%i {default}for killing the {red}High Value Target{default}.",
 				(GetClientTeam(nAttackerId) == 3 ? "{blue}" : "{red}"), szClientName, nTotalReward);
 
-			CPrintToChat(nAttackerId, "%sYou {default}have been rewarded {lightgreen}$%i {default}for killing the {red}high value target{default}.",
+			CPrintToChat(nAttackerId, "%sYou {default}have been rewarded {lightgreen}$%i {default}for killing the {red}High Value Target{default}.",
 				(GetClientTeam(nAttackerId) == 3 ? "{blue}" : "{red}"), nTotalReward);
 
 			int nNewMoney = GetEntData(nAttackerId, m_iAccount) + nTotalReward;
@@ -264,7 +264,7 @@ public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 		if (g_nHvt != -1 && IsValidClient(g_nHvt) && GetClientName(g_nHvt, szClientName, sizeof(szClientName)))
 		{
 			HvtDebugMessage("Event_RoundStart: printing...");
-			CPrintToAllExcept(g_nHvt, "%s%s {default}is the current {red}high value target{default}.",
+			CPrintToAllExcept(g_nHvt, "%s%s {default}is the current {red}High Value Target{default}.",
 				(GetClientTeam(g_nHvt) == 3 ? "{blue}" : "{red}"), szClientName);
 
 			HvtDebugMessage("Event_RoundStart: printing... 2");
